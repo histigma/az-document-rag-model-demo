@@ -1,0 +1,39 @@
+[project]
+name = "rag-be-fastapi"
+version = "0.1.0"
+description = "FastAPI based microservice project"
+authors = [{ name = "Lee Dae Geon", email = "histigma01@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]>=0.38.0",
+    "pydantic-settings",
+    #
+    "openai",
+    "azure-functions",
+    "weaviate-client",
+    "langchain",
+    "langchain-openai==1.0.2",
+    "faiss-cpu",
+    #
+    "pandas",
+    "numpy",
+    "pytz",
+    "requests",
+    "pydantic>=2.9.0",
+    "python-dotenv",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-asyncio",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"

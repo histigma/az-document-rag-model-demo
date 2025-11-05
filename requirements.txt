@@ -1,0 +1,15 @@
+azure-functions
+fastapi
+uvicorn==0.38.0
+langchain-openai==1.0.2
+pydantic-settings
+
+openai
+langchain
+faiss-cpu
+weaviate-client
+
+pandas
+numpy
+pytz
+requests
