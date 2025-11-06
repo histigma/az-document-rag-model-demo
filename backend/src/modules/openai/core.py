@@ -1,14 +1,11 @@
-from .abs import BaseOpenAIEmbeddings, BaseOpenAIConversation
-from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings, AzureChatOpenAI
+from .abs import BaseOpenAIConversation
+from langchain_openai import AzureChatOpenAI
 from settings import api_settings
-import logging
 
 __all__ = (
     'get_az_llm',
-    'OpenAIEmbeddingAdapter',
-    'AzureOpenAIEmbeddingAdapter',
-    'AzureOpenAIConversationAdapter',
-    'BaseOpenAIConversation'
+    'BaseOpenAIConversation',
+    'AzureOpenAIConversationAdapter'
 )
 
 def get_az_llm():
@@ -24,11 +21,11 @@ def get_az_llm():
     max_retries = 2
     timeout = None
     max_completion_tokens=None
-    if not hasattr(get_az_llm, "instance"):
+    if not hasattr(get_az_llm, "_instance"):
         print(
-            f"Creating a new instance of AZ LLM: {api_settings.OPENAI_GPT_MODEL}, {api_settings.OPENAI_API_VERSION}"
+            f"Creating a new instance of Azure OpenAI: {api_settings.OPENAI_GPT_MODEL}, {api_settings.OPENAI_API_VERSION}"
         )
-        get_az_llm.instance = AzureChatOpenAI(
+        get_az_llm._instance = AzureChatOpenAI(
             azure_deployment=api_settings.OPENAI_GPT_MODEL,
             api_version=api_settings.OPENAI_API_VERSION,
             temperature=api_settings.LLM_TEMPERATURE,
@@ -36,31 +33,17 @@ def get_az_llm():
             timeout=timeout,
             max_retries=max_retries,
         )
-    return get_az_llm.instance
+    return get_az_llm._instance
 
+#   Create a instance once server starts.
+if __name__ != '__main__':
+    get_az_llm()
 
-class OpenAIEmbeddingAdapter(
-    BaseOpenAIEmbeddings[OpenAIEmbeddings]
-):
-    """Vetorizing text data using Open AI Embedding of Langchain"""
-    def embedding(self, text: str):
-        return self.model.embed_query(
-            text
-        )
-
-
-class AzureOpenAIEmbeddingAdapter(
-    BaseOpenAIEmbeddings[AzureOpenAIEmbeddings]
-):
-    """[Azure] Vetorizing text data using Azure Open AI of Langchain"""
-    def embedding(self, text: str):
-        return self.model.embed_query(
-            text
-        )
-    
 
 class AzureOpenAIConversationAdapter(
     BaseOpenAIConversation[AzureChatOpenAI]
 ):
     ...
     
+
+

@@ -1,6 +1,16 @@
-# A Stock RAG model using Azure Open AI
+# [AZ OpenAI] AzDocRAG Demo — Document-based RAG Model Platform
 
-Created by histigma
+> A lightweight demo platform for document-based **Retrieval-Augmented Generation (RAG)** using **Azure OpenAI**, **LangChain**, and **Weaviate**.
+
+**AzDocRAG Demo** is an experimental platform that demonstrates how to:
+
+- Embed and index text documents into a **vector database (Weaviate)**
+- Retrieve relevant chunks for user queries
+- Generate contextual responses using **Azure OpenAI** or **OpenAI** models
+- Run end-to-end document Q&A via **FastAPI backend** and optional frontend
+
+> [!NOTE]
+> Built with Azure OpenAI by default, but also works with your own OpenAI key. Easily switch between local Weaviate, cloud vector DBs, MongoDB, or CosmosDB — your setup, your choice.
 
 ## Architecture
 
@@ -33,9 +43,9 @@ flowchart TD
 
 #### Dependencies
 
-Python version: 3.11
-Backend: FastAPI
-Frontend: Streamlit
+**Python version:** 3.11
+**Backend:** FastAPI
+**Frontend:** Streamlit
 
 ```bash
 # If not exists miniconda env

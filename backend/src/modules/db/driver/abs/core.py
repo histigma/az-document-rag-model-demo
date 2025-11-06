@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, TypeVar, Generic
+from typing import Any, TypeVar, Generic, Union
 from contextlib import contextmanager
 
 Td = TypeVar('Td')
@@ -8,7 +8,7 @@ class DatabaseBackendShape(
         ABC, 
         Generic[Td]
 ):
-    def __init__(self, client: Td) -> None:
+    def __init__(self, client: Union[Td, None]) -> None:
         self.__client = client
 
     @property

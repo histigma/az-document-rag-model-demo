@@ -12,3 +12,5 @@ async def send_eventhub_message(payload: dict):
     result = await send_event(payload)
     return {"status": "sent", "result": result}
 
+
+

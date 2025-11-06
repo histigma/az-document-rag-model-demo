@@ -1,13 +1,17 @@
 azure-functions
+# azure-cosmos      # enables if you use the azure cosmos db (nosql)
 fastapi
 uvicorn==0.38.0
-langchain-openai==1.0.2
+python-multipart
 pydantic-settings
 
 openai
 langchain
-faiss-cpu
+langchain-openai==1.0.2
+langchain-weaviate
+langchain_community
 weaviate-client
+faiss-cpu
 
 pandas
 numpy

@@ -10,6 +10,9 @@ app = CoreApp(
     version="0.1.0"
 )
 app.register_routes()
+app.init_logging(
+    development=True
+)
 
 @app.get("/")
 async def root():

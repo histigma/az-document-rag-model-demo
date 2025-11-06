@@ -1,6 +1,10 @@
 from modules.openai import BaseOpenAIConversation
 import logging
 
+__all__ = (
+    'GeneralPromptHandleClient',
+)
+
 class GeneralPromptHandleClient:
     """
     Makes a prompt for llm fit to subject by your configuration.

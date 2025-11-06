@@ -7,7 +7,11 @@ from .abs import DatabaseBackendShape
 from typing import Any
 from contextlib import contextmanager
 
-from azure.cosmos import CosmosClient
+try:
+    from azure.cosmos import CosmosClient
+except ModuleNotFoundError as e:
+    print(f"Warning: Azure Cosmos Module not found. If you're not using Azure Cosmos DB, ignore this.")
+    CosmosClient = object
 
 __all__ =(
     'CosmosDB',

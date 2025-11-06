@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   weaviate:
-    image: semitechnologies/weaviate:1.25.9
+    image: semitechnologies/weaviate:1.28.3
     container_name: weaviate
     restart: unless-stopped
     ports:

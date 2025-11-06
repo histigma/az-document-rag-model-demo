@@ -12,6 +12,22 @@ class CoreApp(
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    def init_logging(self, development=False):
+        if development:
+            logging.basicConfig(
+                level=logging.INFO,
+                format="[%(levelname)s]     [%(asctime)s] [%(name)s] %(message)s",
+            )
+
+        logger = logging.getLogger("src")
+        logger.setLevel(logging.INFO)
+        console_handler = logging.StreamHandler()
+        formatter = logging.Formatter(
+            "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
+        )
+        console_handler.setFormatter(formatter)
+        logger.addHandler(console_handler)
+
     def register_routes(self):
         self.include_router(rag.router, prefix="/rag", tags=["Items"])
         self.include_router(eventhub.router, prefix="/eventhub", tags=["Event Hub"])
