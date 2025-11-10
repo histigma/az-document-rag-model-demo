@@ -1,22 +1,19 @@
-from typing import Type, Union, overload, TYPE_CHECKING
+from typing import Type, Union, TYPE_CHECKING
 from ..driver.abs import DatabaseBackendShape
 from ..driver.weaviate_client import LocalWeaviateDB
 from modules.openai.vectorize import DataVectorizer
 
-from .core import WeaviateRepoQueryResult
+from .models import WeaviateRepoQueryResult
 from weaviate.classes.query import MetadataQuery
 
 if TYPE_CHECKING:
     from weaviate.collections.classes.internal import QueryReturn, Object
 
-
 __all__ = (
-    'WeaviateRepository',
+    'WeaviateVectorRepository',
 )
 
-
-
-class WeaviateRepository:
+class WeaviateVectorRepository:
     """Repository for accessing Weaviate-like database backends."""
     SUPPORT_CLASSES: tuple[Type[DatabaseBackendShape], ...] = (
         LocalWeaviateDB,
@@ -43,7 +40,7 @@ class WeaviateRepository:
             top_k: int = 5,
             user_internal_vectorize_module: bool=False
     ) -> WeaviateRepoQueryResult:
-        """Query for vector distance.
+        """Query for string or embedded data.
         (string --> vectorize --> query)
 
         ```python

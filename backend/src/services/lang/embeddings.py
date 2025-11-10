@@ -62,3 +62,6 @@ class TextChunkDataToVectorizeUploader:
             logging.error(e)
             return None
         return vector_store
+
+
+

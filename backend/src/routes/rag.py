@@ -15,7 +15,7 @@ from modules.openai import (
 )
 from modules.db.driver import get_weaviate_db_client
 from services.lang.conversation import GeneralPromptHandleClient
-from services.lang.store_embeddings import TextChunkDataToVectorizeUploader
+from services.lang.embeddings import TextChunkDataToVectorizeUploader
 from modules.nlp.text_process import TextDataChunker
 from settings import RagPartition
 
