@@ -46,7 +46,6 @@ class GeneralPromptHandleClient:
             ),
         ]
         try:
-            # 채팅 완성 API 호출
             message = self._openai_client.chat(
                 messages
             )

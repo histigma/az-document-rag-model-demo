@@ -87,8 +87,6 @@ async def vectorize_txt(
     wv_store = await embedding_uploader.async_weaviate_upload(
         documents, rag_partition
     )
-
-    logging.info(f"Uploading text data to database is completed: {wv_store}")
     return JSONResponse(
         {
             "filename": file.filename, 
