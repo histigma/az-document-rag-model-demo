@@ -3,7 +3,7 @@ __all__ = (
 )
 import logging
 from fastapi import FastAPI
-from routes import eventhub, rag
+from routes import eventhub, rag, core
 
 
 class CoreApp(
@@ -29,6 +29,7 @@ class CoreApp(
         logger.addHandler(console_handler)
 
     def register_routes(self):
-        self.include_router(rag.router, prefix="/rag", tags=["Items"])
-        self.include_router(eventhub.router, prefix="/eventhub", tags=["Event Hub"])
+        self.include_router(core.router, tags=["Chat"])
+        self.include_router(rag.router, prefix="/rag", tags=["Rag"])
+        self.include_router(eventhub.router, prefix="/eventhub", tags=["Cloud"])
 

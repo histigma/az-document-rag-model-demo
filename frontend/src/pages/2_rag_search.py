@@ -1,32 +1,37 @@
 import streamlit as st
 import requests
+from settings import BACKEND_API_URI    # type: ignore
 
-st.set_page_config(page_title="RAG Demo", layout="wide")
+RAG_ENDPOINT = f"{BACKEND_API_URI.rstrip('/')}/rag/chat"
+
+st.set_page_config(page_title="RAG Demo", layout="centered")
 
 st.title("RAG Demo - General Conversation")
 
-query = st.text_input("Conversation Start: ")
-# sector = st.selectbox("Filter by sector:", ["All", "Technology", "Finance", "Healthcare"])
+if "rag_messages" not in st.session_state:
+    st.session_state.rag_messages = []
 
-if st.button("Question"):
-    payload = {"question": query}
-    # if sector != "All":
-    #     payload["sector"] = sector
+for message in st.session_state.rag_messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-    try:
-        response = requests.post("http://localhost:8000/rag/chat", json=payload)
-        data = response.json()
-        
-        st.subheader("Results:")
-        if "message" in data and data["message"]:
-            if isinstance(data['message'], list):
-                for idx, doc in enumerate(data["results"], 1):
-                    st.markdown(f"**{idx}. {doc.get('title', 'No Title')}**")
-                    st.write(doc.get("content", "No content"))
-                    st.caption(f"Date: {doc.get('date', 'N/A')} | Ticker: {doc.get('ticker', 'N/A')}")
-            else:
-                st.write(f"{data['message']}")
-        else:
-            st.write("No results found.")
-    except Exception as e:
-        st.error(f"Error fetching data: {e}")
+# if sector != "All":
+#     payload["sector"] = sector
+
+if prompt := st.chat_input("Your question:"):
+    st.session_state.rag_messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    payload = {"question": prompt}
+    with st.chat_message("assistant"):
+        stream = 'No result.'
+        try:
+            response = requests.post(RAG_ENDPOINT, json=payload)
+            data = response.json()
+            if "message" in data and data["message"]:
+                stream = data['message']
+        except Exception as e:
+            st.error(f"Error fetching data: {e}")
+        response = st.write(stream)
+    st.session_state.rag_messages.append({"role": "assistant", "content": response})

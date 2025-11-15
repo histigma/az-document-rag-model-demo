@@ -1,0 +1,2 @@
+
+BACKEND_API_URI = 'http://localhost:8000'

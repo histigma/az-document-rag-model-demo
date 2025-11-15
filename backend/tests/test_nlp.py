@@ -1,6 +1,6 @@
 import pytest
 from modules.nlp.text_process import TextDataChunker, Document
-
+from services.lang import VectorstoreRetreivingService
 
 def test_text_chunker():
     c = TextDataChunker()
@@ -9,4 +9,7 @@ def test_text_chunker():
     )
     assert isinstance(cs, list)
     assert all(isinstance(c, Document) for c in cs)
+
+
+
 

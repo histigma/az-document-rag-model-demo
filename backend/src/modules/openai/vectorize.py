@@ -1,7 +1,8 @@
+from langchain_openai.embeddings.base import OpenAIEmbeddings
 from modules.openai import BaseOpenAIEmbeddings
+
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .abs import OpenAIEmbeddings
     from langchain_core.documents import Document
 
 
@@ -16,9 +17,15 @@ class DataVectorizer:
             embedding_adapter: BaseOpenAIEmbeddings,
     ) -> None:
         self._embedder = embedding_adapter
+        if not isinstance(embedding_adapter, BaseOpenAIEmbeddings):
+            raise TypeError(
+                f"Invalid embedding adapter: {type(embedding_adapter)}, expected {type(BaseOpenAIEmbeddings)}"
+            )
 
     @property
     def embedding_model(self) -> "OpenAIEmbeddings":
+        if not isinstance(self._embedder.model, OpenAIEmbeddings):
+            raise TypeError(f"Invalid embedder model: {self._embedder.model}")
         return self._embedder.model
 
     def vectorize_documents(self, documents: list["Document"]):

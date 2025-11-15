@@ -61,16 +61,10 @@ class BaseOpenAIConversation(
 
     def chat(self, message):
         """"""
-        logging.info(
-            f"Requested a chat message for invoke(): {message}"
-        )
         return self.model.invoke(message)
     
     async def async_chat(self, message):
         """"""
-        logging.info(
-            f"Requested a chat message for invoke(): {message}"
-        )
         result = await self.model.ainvoke(message)
         return result
 

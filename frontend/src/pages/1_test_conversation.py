@@ -1,9 +1,13 @@
 import streamlit as st
 import requests
+from settings import BACKEND_API_URI        # type: ignore
 
-st.set_page_config(page_title="General Conversation", layout="wide")
+CHAT_ENDPOINT = f"{BACKEND_API_URI.rstrip('/')}/chat/test"
 
-st.title("General Conversation with OpenAI")
+
+st.set_page_config(page_title="Test Conversation", layout="centered")
+
+st.title("Test Conversation with OpenAI (Pure)")
 
 
 # query = st.text_input("Conversation Start: ")
@@ -28,7 +32,7 @@ if prompt := st.chat_input("What is up?"):
     with st.chat_message("assistant"):
         stream = 'No result.'
         try:
-            response = requests.post("http://localhost:8000/rag/chat", json=payload)
+            response = requests.post(CHAT_ENDPOINT, json=payload)
             data = response.json()
             if "message" in data and data["message"]:
                 stream = data['message']

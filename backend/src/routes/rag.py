@@ -4,18 +4,22 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 import logging 
 
-from .models import RagQueryRequest, ChatRequest
+from .models import ChatRequest, RagQueryRequest
 from modules.rag.mime import check_content_length
 from modules.openai import (
     get_az_llm, 
     get_az_embeddings,
-    AzureOpenAIConversationAdapter,
     DataVectorizer,
+    AzureOpenAIConversationAdapter,
     AzureOpenAIEmbeddingAdapter
 )
 from modules.db.driver import get_weaviate_db_client
-from services.lang.conversation import GeneralPromptHandleClient
-from services.lang.embeddings import TextChunkDataToVectorizeUploader
+from services.lang import (
+    GeneralPromptHandleClient, 
+    TextChunkDataToVectorizeUploader, 
+    VectorstoreRetreivingService,
+    RAG_GENERAL_SYSTEM_CONTEXT
+)
 from modules.nlp.text_process import TextDataChunker
 from settings import RagPartition
 
@@ -23,20 +27,40 @@ from settings import RagPartition
 router = APIRouter()
 
 @router.post("/chat")
-def conversation(request: ChatRequest, llm=Depends(get_az_llm)):
-    # Create a conversation client
+def rag_chatbot_documents(
+        request: RagQueryRequest, 
+        llm=Depends(get_az_llm),
+        db_client=Depends(get_weaviate_db_client),
+        embeddings=Depends(get_az_embeddings),
+):
+    """This function is made for provide a RAG chatbot conversation.
+    """
+    # Vector db collection (like such as `table`)
+    collection = RagPartition.DEFAULT   
+    query = request.question
+    # Vector search
+    service = VectorstoreRetreivingService(
+        db_client, 
+        DataVectorizer(
+            AzureOpenAIEmbeddingAdapter(embeddings)
+        )
+    )
+    context = service.retrieve_to_context(
+        query, index=collection, top_k=request.k
+    )
+    # Conversation (LLM)
     conversation = AzureOpenAIConversationAdapter(llm)
     prompt_handler = GeneralPromptHandleClient(
         conversation,
-        "You are genius chat bot."
+        RAG_GENERAL_SYSTEM_CONTEXT
     )
-    query = request.question
     answer = prompt_handler.chat_user_query(
-        query
+        query, context_internal=context
     )
     return {
         "message": answer.content if answer else 'null'
     }
+
 
 @router.post("/vectorize/upload-text")
 async def vectorize_txt(
@@ -84,7 +108,7 @@ async def vectorize_txt(
     # Get chunks from narrative text.
     documents = TextDataChunker().from_text(text)
     # (Async) Upload to database 
-    wv_store = await embedding_uploader.async_weaviate_upload(
+    __ = await embedding_uploader.async_weaviate_upload(
         documents, rag_partition
     )
     return JSONResponse(
@@ -94,4 +118,7 @@ async def vectorize_txt(
             "preview": text[ :200]
         }
     )
+
+
+
 
